@@ -1,0 +1,59 @@
+@import '../../Variable.scss';
+
+.project {
+    &__name {
+        color: $Text-Violet;
+    }
+}
+
+
+.nav {
+    &__link {
+        color: $Text-Unactive-Violet;
+        padding: 0.5rem;
+
+
+    }
+
+    &__link:hover {
+        transition: 200ms ease-in-out;
+        color: $Text-Active-Violet;
+        background-color: $Text-Unactive-Violet;
+    }
+
+    &__link.active {
+        color: $Text-Active-Violet;
+        background-color: $Text-Unactive-Violet;
+    }
+}
+
+.login {
+    &__button:hover {
+        background-color: $Text-Unactive-Violet;
+        color: $Text-Active-Violet;
+    }
+
+    &__button {
+        transition: 300ms;
+        padding: 0.5rem;
+        background-color: $Text-Active-Violet;
+        color: white;
+    }
+}
+
+.categories {
+    width: 100vw;
+    left: 0;
+    visibility: hidden;
+    opacity: 0;
+
+    .wrapper {
+        width: 80%;
+        opacity: 1;
+    }
+}
+
+.categories.active {
+    visibility: visible;
+    opacity: 100%;
+}
