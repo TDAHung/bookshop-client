@@ -1,8 +1,12 @@
+@import './Variable.scss';
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+:root {}
 
 html {
     font-size: 62.5%;
@@ -10,10 +14,9 @@ html {
 }
 
 body {
-    background-color: #EFF3FD;
     background-size: cover;
-    /* color: $Text-Color-Dark; */
     height: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 
@@ -23,7 +26,7 @@ ul {
 
 img {
     width: 100%;
-    object-fit: cover;
+    height: 100%;
 }
 
 a {

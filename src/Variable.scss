@@ -1,18 +1,20 @@
 $Theme-Primary: #E5E5E5;
 $Theme-White: #FFFFFF;
 $Theme-Dark: #000000;
-$Theme-Color-Blue: #5A55D2;
-$Theme-Color-White: #EFF0F4;
-$Theme-Color-Green: #00DEA3;
-$Text-Color-Dark: #00140E;
-$Text-Color-Red: #FF0000;
-$Text-Color-DarkGrey: #333333;
-$Text-Color-Green: $Theme-Color-Green;
-$Text-Color-While: $Theme-Color-White;
-$Text-Color-BlueDark: #192A3E;
-$Text-Color-BlueLight: #90A0B7;
-$Icon-Color-Dark: #231F20;
-$Icon-Color-Violet: #783EFD;
+$Theme-Blue: #5A55D2;
+$Theme-White: #EFF0F4;
+$Theme-Green: #00DEA3;
+$Text-Violet: #41135C;
+$Text-Dark: #00140E;
+$Text-Red: #FF0000;
+$Text-DarkGrey: #333333;
+$Text-Green: $Theme-Green;
+$Text-While: $Theme-White;
+$Text-BlueDark: #192A3E;
+$Text-BlueLight: #90A0B7;
+$Text-Unactive-Violet: #B2A6C0;
+$Icon-Dark: #231F20;
+$Text-Active-Violet: #6A4981;
 
 //login-size
 $Input-Text-Color: #343C44;
@@ -32,71 +34,3 @@ $Sidebar-Shadow-Color: rgba(0, 0, 0, 0.06);
 $Date-Text-Color: #707EAE;
 $Search-Placeholder-Color: #AEB6CF;
 $Notifs-active-Dot-Color: #F23985;
-
-@mixin button-Needed {
-    width: 13rem;
-    height: 2.8rem;
-    background: rgba(36, 193, 143, 0.2);
-    border-radius: 1.6rem;
-    cursor: pointer;
-
-    &:hover {
-        background: rgba(36, 193, 143, 0.6);
-    }
-
-    &:focus {
-        background: rgba(36, 193, 143);
-    }
-}
-
-@mixin button-Edit {
-    width: 14.4rem;
-    height: 4.2rem;
-    background: #5F66E9;
-    border-radius: 0.6rem;
-    cursor: pointer;
-
-    &:hover {
-        background: #040ca1;
-    }
-}
-
-@mixin button-Import {
-    width: 8.434rem;
-    height: 3.4rem;
-    background: $Theme-White;
-    border-radius: 0.4rem;
-    cursor: pointer;
-
-    &:hover {
-        background: $Theme-Dark;
-        color: $Theme-White;
-    }
-}
-
-@mixin sideMenu-Content {
-    height: 2.2rem;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 1.8rem;
-    line-height: 2.2rem;
-    color: $Text-Color-Dark;
-}
-
-@mixin SideMenu-Icon {
-    width: 2rem;
-    color: $Icon-Color-Dark;
-}
-
-@function setWidthColumn($widthwrap, $item) {
-    //$widthwrap=>total width row
-    //$item=>number of columns
-    @return $widthWarp / $item;
-}
-
-@function setWidthColumnMargin($widthwrap, $item, $marginColumn) {
-    //$widthwrap=>total width row
-    //$item=>number of columns
-    @return ($widthWarp / $item)-$marginColumn*2;
-}

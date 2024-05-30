@@ -1,60 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Routes, Route } from 'react-router-dom';
 import './App.scss'
-import { gql, useQuery } from '@apollo/client';
-import { Loading } from './components/Loading';
+import Home from './pages/Home';
+import Author from './pages/Author';
+import { pages } from './utils/constant';
+import Order from './pages/Order';
+import Category from './pages/Category';
+import Header from './components/Header';
+import Book from './pages/Book';
+import BookDetail from './pages/Book/BookDetail';
+import CategoryDetail from './pages/Category/CategoryDetail';
+import AuthorDetail from './pages/Author/AuthorDetail';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
-    }
-  }
-`;
-  const { loading, error, data } = useQuery(GET_LOCATIONS);
-
-  function DisplayLocations() {
-    if (error) return <p>Error : {error.message}</p>;
-
-    return data.locations.map(({ id, name, description, photo }: { id: any, name: any, description: any, photo: any }) => (
-      <div key={id}>
-        <h3>{name}</h3>
-        <img width="400" height="250" alt="location-reference" src={`${photo}`} />
-        <br />
-        <b>About this location:</b>
-        <p>{description}</p>
-        <br />
-      </div>
-    ));
-  }
-
   return (
-    loading ? <Loading /> : <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main>
+      <Header />
+      <div className="container mx-auto p-4 px-20">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path={`${pages.BOOK}`} element={<Book />} />
+          <Route path={`${pages.BOOK}/:id`} element={<BookDetail />} />
+          <Route path={pages.AUTHOR} element={<Author />} />
+          <Route path={`${pages.AUTHOR}/:id`} element={<AuthorDetail />} />
+          <Route path={pages.CATEGORY} element={<Category />} />
+          <Route path={`${pages.CATEGORY}/:id`} element={<CategoryDetail />} />
+          <Route path={pages.ORDER} element={<Order />} />
+        </Routes>
       </div>
-      <h1 className='text-3xl font-bold underline'>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <DisplayLocations />
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </main>
   )
 }
 

@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import { BrowserRouter } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { API_CONST } from './utils/constant.ts';
+import App from './App.tsx';
+import './index.css'
 
 // const client = new ApolloClient({
 //   uri: API_CONST.API_URL,
@@ -10,12 +10,14 @@ import { API_CONST } from './utils/constant.ts';
 // });
 
 const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
+  uri: 'http://localhost:3000/graphql',
   cache: new InMemoryCache(),
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </ApolloProvider>,
 )
