@@ -6,7 +6,9 @@ import { faCartArrowDown, faPersonWalking } from "@fortawesome/free-solid-svg-ic
 import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "../Loading";
-import { Avatar, Badge, Button, Space } from "antd";
+import { Badge } from "antd";
+import CartPopUp from "../CartPopUp";
+import { useAuth } from "../../contexts/authProvider";
 
 
 const ALL_CATEGORIES = gql`
@@ -23,6 +25,7 @@ const Header = () => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const { loading, error, data } = useQuery(ALL_CATEGORIES);
     const location = useLocation();
+    const { getUser } = useAuth();
 
     const renderCategories = () => {
         if (loading) return <Loading />
@@ -69,14 +72,7 @@ const Header = () => {
                 </ul>
             </nav>
             <div className="flex">
-                {/* <div className="login__button text-2xl rounded-xl"> */}
-                <Badge count={5} className="login__button text-2xl rounded-xl" style={{ backgroundColor: '#52c41a' }}>
-                    <Link to={pages.LOGIN}>
-                        <FontAwesomeIcon icon={faCartArrowDown} />
-                        <span className="ms-4">Cart</span>
-                    </Link>
-                </Badge>
-                {/* </div> */}
+                <CartPopUp id={getUser().id} />
                 <div className="login__button text-2xl rounded-xl ms-4">
                     <Link to={pages.LOGIN}>
                         <FontAwesomeIcon icon={faPersonWalking} />

@@ -5,8 +5,14 @@ import { pages } from "../../utils/constant"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons"
 import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons"
+import CartButton from "../CartButton"
+import { CHECK_CART } from "../CartButton/query"
+import { useQuery } from "@apollo/client"
 
-const CardBook = ({ book }: { book: BookEntity }) => {
+const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
+
+    const { loading, error, data } = useQuery(CHECK_CART, { variables: { id: userId } });
+
 
     const renderStarRating = (rating: number) => {
         const stars = [];
@@ -23,7 +29,10 @@ const CardBook = ({ book }: { book: BookEntity }) => {
     }
 
     return <div key={book.id} className="relative">
-        <Carousel className="h-full shadow-lg">
+        <Carousel
+            className="h-full shadow-lg"
+            autoplay={true}
+        >
             {
                 book.images.map((image: ImageEntity) => {
                     return <div key={image.key}>
@@ -62,11 +71,10 @@ const CardBook = ({ book }: { book: BookEntity }) => {
                 quantity: {book.quantity}
             </div>
         </div>
-        <div className="text-center">
-            <div className="bg-violet-500 shadow-lg shadow-violet-500/50 text-white text-xl mx-auto w-3/4 p-4">
-                Add to cart
-            </div>
-        </div>
+        {
+            !loading ? <CartButton userId={userId} bookId={book.id} cartId={data?.cart?.id} /> : null
+        }
+
     </div>
 }
 export default CardBook;

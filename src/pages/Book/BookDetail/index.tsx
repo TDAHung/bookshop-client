@@ -11,46 +11,7 @@ import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import BookRelatedCategory from "./BookRelatedCategory";
 import BookRelatedAuthor from "./BookRelatedAuthor";
 import BookReview from "./BookReview";
-
-const GET_BOOK = gql`
-query showOne($input: Int!){
-    book(id: $input){
-        price,
-        title,
-        description,
-        discount,
-        images{
-            key,
-            name,
-            size,
-            url
-        },
-        categories{
-            category{
-                id,
-                name,
-                description
-            }
-        },
-        authors{
-            author{
-                id,
-                firstName,
-                lastName
-            }
-        },
-        reviews{
-            comment,
-            rating,
-            user{
-                firstName,
-                lastName
-            },
-            createdAt
-        }
-    }
-}
-`;
+import { GET_BOOK } from "../query";
 
 const BookDetail = () => {
     const { id } = useParams();

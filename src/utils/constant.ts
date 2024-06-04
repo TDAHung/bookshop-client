@@ -8,7 +8,7 @@ export const pages = {
     CATEGORY: 'categories',
     AUTHOR: 'authors',
     ORDER: 'orders',
-
+    CART: 'cart',
     LOGIN: 'login',
     REGISTER: 'register'
 };

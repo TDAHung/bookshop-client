@@ -3,70 +3,45 @@ import { useParams } from "react-router-dom";
 import { Loading } from "../../../components/Loading";
 import { BookEntity } from "../../../types/books";
 import CardBook from "../../../components/CardBook";
-const GET_CATEGORY = gql`
-query category($input: Int!){
-    category(id: $input){
-        name,
-        description,
-        banner,
-        bannerColor,
-        books{
-            book{
-                id
-                title,
-                price,
-                description,
-                discount,
-                quantity,
-                images{
-                    key,
-                    name,
-                    url,
-                }
-            }
-        }
-    }
-}
-`;
-
-const GET_BOOK = gql`
-query findBooks($input: [String!]!){
-    booksBasedOnCategoriesOrAuthor(categories: $input){
-        description,
-        title,
-        id,
-        discount,
-        price,
-        quantity,
-        images{
-            key,
-            name,
-            url,
-        }
-    }
-}
-`;
+import { useAuth } from "../../../contexts/authProvider";
+import { GET_BOOKS, GET_CATEGORY } from "../query";
 
 const CategoryDetail = () => {
     const { id } = useParams();
+    const { getUser } = useAuth();
 
     const category = useQuery(GET_CATEGORY, {
         variables: {
-            input: Number(id)
+            input: Number(id),
+
         }
     });
 
-    const books = useQuery(GET_BOOK, {
+    const books = useQuery(GET_BOOKS, {
         variables: {
-            input: [id]
+            limit: 10,
+            search: [
+                {
+                    field: "title",
+                    contains: ''
+                }
+            ],
+            filter: [
+                {
+                    field: "categories",
+                    in: [
+                        Number(id)
+                    ]
+                }
+            ]
         }
     });
 
     const displayCategory = () => {
         if (books.loading) return <Loading />
         if (books.error) return <p>{books.error.message}</p>
-        return books.data.booksBasedOnCategoriesOrAuthor.map((book: BookEntity) => {
-            return <CardBook book={book} />
+        return books.data.books.map((book: BookEntity) => {
+            return <CardBook userId={getUser().id} book={book} key={book.id} />
         })
     }
     return (

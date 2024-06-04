@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import './App.scss'
+import './App.scss';
 import Home from './pages/Home';
 import Author from './pages/Author';
 import { pages } from './utils/constant';
@@ -10,25 +10,28 @@ import Book from './pages/Book';
 import BookDetail from './pages/Book/BookDetail';
 import CategoryDetail from './pages/Category/CategoryDetail';
 import AuthorDetail from './pages/Author/AuthorDetail';
+import Cart from './pages/Cart';
+import Login from './pages/Login';
+import Dashboard from './components/Dashboard';
+import { PrivateRoute } from './components/Route';
 
 function App() {
   return (
-    <main>
-      <Header />
-      <div className="container mx-auto p-4 px-20">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path={`${pages.BOOK}`} element={<Book />} />
-          <Route path={`${pages.BOOK}/:id`} element={<BookDetail />} />
-          <Route path={pages.AUTHOR} element={<Author />} />
-          <Route path={`${pages.AUTHOR}/:id`} element={<AuthorDetail />} />
-          <Route path={pages.CATEGORY} element={<Category />} />
-          <Route path={`${pages.CATEGORY}/:id`} element={<CategoryDetail />} />
-          <Route path={pages.ORDER} element={<Order />} />
-        </Routes>
-      </div>
-    </main>
-  )
+    <Routes>
+      <Route path={pages.LOGIN} element={<Login />} />
+      <Route path='/' element={<Dashboard />}>
+        <Route path="/" element={<Home />} />
+        <Route path={`${pages.BOOK}`} element={<Book />} />
+        <Route path={`${pages.BOOK}/:id`} element={<BookDetail />} />
+        <Route path={pages.AUTHOR} element={<Author />} />
+        <Route path={`${pages.AUTHOR}/:id`} element={<AuthorDetail />} />
+        <Route path={pages.CATEGORY} element={<Category />} />
+        <Route path={`${pages.CATEGORY}/:id`} element={<CategoryDetail />} />
+        <Route path={pages.CART} element={<Cart />} />
+        <Route path={pages.ORDER} element={<Order />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;

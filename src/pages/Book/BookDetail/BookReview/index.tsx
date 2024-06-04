@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReviewEntity } from "../../../../types";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
+import { Empty } from "antd";
 
 
 const calculateRatings = (reviews: Array<ReviewEntity>) => {
@@ -61,8 +62,13 @@ const BookReview = ({ reviews }: { reviews: Array<ReviewEntity> }) => {
                 <div className="px-16 text-2xl border-l-4 border-indigo-500 my-8">
                     Books Reviews
                 </div>
-                <div className="w-1/2 my-4 ps-16">
-                    <div className="text-3xl font-semibold">None Reviews</div>
+                <div className="flex justify-center">
+                    <Empty
+                        description={
+                            <span>
+                                There are no reviews
+                            </span>
+                        } />
                 </div>
             </div>
             :

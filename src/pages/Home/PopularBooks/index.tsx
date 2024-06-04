@@ -1,29 +1,11 @@
-import { Card } from 'antd';
 import 'antd/dist/reset.css';
-import { gql, useQuery } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@apollo/client';
 import { Loading } from '../../../components/Loading';
-import { BookEntity } from '../../../types/books';
-import { Image } from '../../../types/image';
+import { ImageEntity } from '../../../types/image';
 import { Link } from 'react-router-dom';
 import { pages } from '../../../utils/constant';
+import { GET_BOOKS } from '../query';
 
-const GET_BOOKS = gql`
-query showAll($limit: Float!){
-    getMostPopularBooks(limit: $limit){
-        id,
-        description,
-        images{
-            url,
-            key,
-            name,
-            size
-        },
-        rating,
-        title
-    }
-}
-`;
 const PopularBook = () => {
     const displayPopularBook = () => {
         const { loading, error, data } = useQuery(GET_BOOKS, {
@@ -33,7 +15,7 @@ const PopularBook = () => {
         });
         if (loading) return <Loading />
         if (error) return <p>{error.message}</p>
-        return data.getMostPopularBooks.map(({ id, title, images }: { id: number, title: string, images: Array<Image> }) => (
+        return data.getMostPopularBooks.map(({ id, title, images }: { id: number, title: string, images: Array<ImageEntity> }) => (
             <div key={id} className='h-80'>
                 <Link to={`${pages.BOOK}/${id}`} className=''>
                     <img className='h-full rounded-xl' src={images[0].url} alt="" />

@@ -22,20 +22,21 @@ query showOne($input: Int!){
 `;
 
 const GET_BOOK = gql`
-query findBooks($input: [String!]!){
-    booksBasedOnCategoriesOrAuthor(authors: $input){
-        description,
-        title,
+query showAll($limit: Float!, $filter: [FilterBy!]!, $search: [SearchBy!]!){
+    books(limit: $limit, filter: $filter, search: $search){
         id,
-        discount,
         price,
+        title,
+        description,
         quantity,
+        discount
         avgRating,
-        images{
-            key,
-            name,
-            url,
-        }
+      	images{
+          key,
+          name,
+          size,
+          url
+        },
     }
 }
 `;
@@ -43,22 +44,38 @@ query findBooks($input: [String!]!){
 
 const AuthorDetail = () => {
     const { id } = useParams();
+
     const author = useQuery(GET_AUTHOR, {
         variables: {
-            input: Number(id)
+            input: Number(id),
+
         }
     });
 
     const books = useQuery(GET_BOOK, {
         variables: {
-            input: [id]
+            limit: 10,
+            search: [
+                {
+                    field: "title",
+                    contains: ''
+                }
+            ],
+            filter: [
+                {
+                    field: "authors",
+                    in: [
+                        Number(id)
+                    ]
+                }
+            ]
         }
-    })
+    });
 
     const displayBook = () => {
         if (books.loading) return <Loading />
         if (books.error) return <p>{books.error.message}</p>
-        return books.data.booksBasedOnCategoriesOrAuthor.map((book: BookEntity) => {
+        return books.data.books.map((book: BookEntity) => {
             return <CardBook book={book} />
         })
     }

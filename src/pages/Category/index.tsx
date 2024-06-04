@@ -1,20 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Loading } from "../../components/Loading";
 import { CategoryEntity } from "../../types/category";
-import { pages } from "../../utils/constant";
 import { Link } from "react-router-dom";
-
-const GET_CATEGORIES = gql`
-    query{
-        categories{
-            id,
-            name,
-            description,
-            banner,
-            bannerColor
-        }
-    }
-`;
+import { GET_CATEGORIES } from "./query";
 
 const Category = () => {
 
