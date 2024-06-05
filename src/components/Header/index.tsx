@@ -3,12 +3,13 @@ import { pages } from "../../utils/constant";
 import './style.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown, faPersonWalking } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "../Loading";
 import { Badge } from "antd";
 import CartPopUp from "../CartPopUp";
-import { useAuth } from "../../contexts/authProvider";
+import { useAuth } from "../../hooks/useAuth";
+import { AuthContext } from "../../contexts/authContext";
 
 
 const ALL_CATEGORIES = gql`
@@ -25,7 +26,7 @@ const Header = () => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const { loading, error, data } = useQuery(ALL_CATEGORIES);
     const location = useLocation();
-    const { getUser } = useAuth();
+    const user = useContext(AuthContext);
 
     const renderCategories = () => {
         if (loading) return <Loading />
@@ -72,12 +73,14 @@ const Header = () => {
                 </ul>
             </nav>
             <div className="flex">
-                <CartPopUp id={getUser().id} />
-                <div className="login__button text-2xl rounded-xl ms-4">
-                    <Link to={pages.LOGIN}>
-                        <FontAwesomeIcon icon={faPersonWalking} />
-                        <span className="ms-4">Login</span>
-                    </Link>
+                <CartPopUp id={user?.id} />
+                <div className="login__button text-2xl rounded-xl ms-4 text-center">
+                    {
+                        user ? <Link to={pages.ORDER} className="">{user.firstName} {user.lastName}</Link> : <Link to={pages.LOGIN}>
+                            <FontAwesomeIcon icon={faPersonWalking} />
+                            <span className="ms-4">Login</span>
+                        </Link>
+                    }
                 </div>
             </div>
         </header>

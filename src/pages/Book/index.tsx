@@ -3,14 +3,15 @@ import { faAt, faFilter, faList, faMoneyBill, faStar, faStarHalfAlt } from "@for
 import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, MenuProps } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthorEntity, BookEntity } from "../../types";
 import { CategoryEntity } from "../../types/category";
 import { Loading } from "../../components/Loading";
 import CardBook from "../../components/CardBook";
-import { useAuth } from "../../contexts/authProvider";
-import { GET_AUTHORS, GET_BOOKS, GET_CATEGORIES } from "./query";
+import { useAuth } from "../../hooks/useAuth";
+import { GET_AUTHORS, GET_BOOKS, GET_CATEGORIES, GET_TOTAL_BOOKS } from "./query";
 import Paging from "../../components/Pagination";
+import { AuthContext } from "../../contexts/authContext";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -27,11 +28,39 @@ const Book = () => {
     const [categories, setCategories] = useState([]);
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
-    const { getUser } = useAuth();
+    const user = useContext(AuthContext);
     const variables = {
         variables: {
-            page: page,
-            limit: 2,
+            page,
+            limit,
+            sortBy: [
+                {
+                    field: "price",
+                    order: priceFilter
+                }
+            ],
+            filter: [
+                {
+                    field: "categories",
+                    in: categoriesFilter
+                },
+                {
+                    field: "authors",
+                    in: authorFilter
+                },
+                {
+                    field: "reviews",
+                    in: reviewFilter
+                }
+            ],
+            except: "-1"
+        }
+    }
+
+    const totalVariables = {
+        variables: {
+            page,
+            limit,
             sortBy: [
                 {
                     field: "price",
@@ -141,7 +170,7 @@ const Book = () => {
     ];
 
     const books = useQuery(GET_BOOKS, variables);
-
+    const totalBooks = useQuery(GET_TOTAL_BOOKS, totalVariables)
     const author_gql = useQuery(GET_AUTHORS);
     const category_gql = useQuery(GET_CATEGORIES);
 
@@ -177,7 +206,7 @@ const Book = () => {
         if (books.loading) return <Loading />
         if (books.error) return <p>{books.error.message}</p>
         return books.data.books.map((book: BookEntity) => {
-            return <CardBook userId={getUser().id} book={book} key={book.id} />
+            return <CardBook userId={user.id} book={book} key={book.id} />
         })
     }
 
@@ -252,13 +281,16 @@ const Book = () => {
                                 {displayBook()}
                             </div>
                 }
-                <Paging
-                    total={500}
-                    page={page}
-                    setPage={setPage}
-                    limit={limit}
-                    setLimit={setLimit}
-                />
+                {
+                    totalBooks.loading ? <Loading /> : <Paging
+                        total={totalBooks.data.totalBooks}
+                        page={page}
+                        setPage={setPage}
+                        limit={limit}
+                        setLimit={setLimit}
+                    />
+                }
+
             </div>
             <div>
             </div>

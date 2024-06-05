@@ -1,5 +1,5 @@
 import './style.scss'
-import { useAuth } from '../../contexts/authProvider';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login = () => {
     const { login } = useAuth();

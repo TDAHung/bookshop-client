@@ -1,5 +1,4 @@
 import { Button } from "antd";
-import { ImageEntity } from "../../types";
 import { pages } from "../../utils/constant";
 import { Link } from "react-router-dom";
 

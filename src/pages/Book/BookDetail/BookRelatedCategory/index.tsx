@@ -3,11 +3,12 @@ import { Loading } from "../../../../components/Loading";
 import { BookEntity } from "../../../../types";
 import CardBook from "../../../../components/CardBook";
 import { GET_BOOKS } from "../../query";
-import { useAuth } from "../../../../contexts/authProvider";
 import { Empty } from "antd";
+import { useContext } from "react";
+import { AuthContext } from "../../../../contexts/authContext";
 
 const BookRelatedCategory = ({ idCategories, id }: { idCategories: Array<string>, id: string | undefined }) => {
-    const { getUser } = useAuth();
+    const user = useContext(AuthContext);
 
     const { loading, error, data } = useQuery(GET_BOOKS, {
         variables: {
@@ -26,7 +27,7 @@ const BookRelatedCategory = ({ idCategories, id }: { idCategories: Array<string>
         if (error) return <p>{error.message}</p>
         if (loading) return <Loading />
         return data.books.map((book: BookEntity) => {
-            return <CardBook userId={getUser().id} key={book.id} book={book} />
+            return <CardBook userId={user.id} key={book.id} book={book} />
         })
     }
 

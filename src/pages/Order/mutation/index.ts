@@ -11,7 +11,7 @@ mutation create($createOrder: CreateOrderInput!){
 `;
 
 export const DELETE_CART = gql`
-mutation removeCart($id: Float!){
+mutation removeCart($id: Int!){
     removeCart(id: $id){
         id
     }

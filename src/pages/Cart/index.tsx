@@ -1,19 +1,14 @@
-import React from 'react';
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import CartItem from "../../components/CartItem";
 import Checkout from "../../components/Checkout";
 import { Loading } from "../../components/Loading";
 import { GET_CART } from './query';
-import { useAuth } from '../../contexts/authProvider';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { Empty } from 'antd';
-// import Empty from '../../components/Empty';
-
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/authContext";
 
 const Cart = () => {
-    const { getUser } = useAuth();
-    const user = getUser();
+    const user = useContext(AuthContext);
     const { loading, error, data } = useQuery(GET_CART, {
         variables: {
             id: user.id
@@ -48,7 +43,6 @@ const Cart = () => {
                             <Checkout cartItems={data.cart.cartItems} />
                         </div>
                     </div>
-
             }
         </div>
     </div>

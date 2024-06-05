@@ -5,7 +5,6 @@ import Author from './pages/Author';
 import { pages } from './utils/constant';
 import Order from './pages/Order';
 import Category from './pages/Category';
-import Header from './components/Header';
 import Book from './pages/Book';
 import BookDetail from './pages/Book/BookDetail';
 import CategoryDetail from './pages/Category/CategoryDetail';
@@ -14,12 +13,19 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
 import { PrivateRoute } from './components/Route';
+import { AuthProvider } from './contexts/authContext';
+import OrderConfirm from './pages/Order/OrderConfirm';
+import OrderDetail from './pages/Order/OrderDetail';
 
 function App() {
   return (
     <Routes>
       <Route path={pages.LOGIN} element={<Login />} />
-      <Route path='/' element={<Dashboard />}>
+      <Route path='/' element={
+        <AuthProvider>
+          <Dashboard />
+        </AuthProvider>
+      }>
         <Route path="/" element={<Home />} />
         <Route path={`${pages.BOOK}`} element={<Book />} />
         <Route path={`${pages.BOOK}/:id`} element={<BookDetail />} />
@@ -28,7 +34,9 @@ function App() {
         <Route path={pages.CATEGORY} element={<Category />} />
         <Route path={`${pages.CATEGORY}/:id`} element={<CategoryDetail />} />
         <Route path={pages.CART} element={<Cart />} />
-        <Route path={pages.ORDER} element={<Order />} />
+        <Route path={pages.ORDERS} element={<Order />} />
+        <Route path={pages.ORDER} element={<OrderConfirm />} />
+        <Route path={`${pages.ORDER}/:id`} element={<OrderDetail />} />
       </Route>
     </Routes>
   );

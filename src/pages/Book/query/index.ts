@@ -60,6 +60,11 @@ query showOne($input: Int!){
 }
 `;
 
+export const GET_TOTAL_BOOKS = gql`
+query getTotal($filter: [FilterBy!]!){
+    totalBooks(filter: $filter)
+}
+`;
 
 export const GET_AUTHORS = gql`
 query{

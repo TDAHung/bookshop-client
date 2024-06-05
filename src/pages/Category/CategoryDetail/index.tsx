@@ -1,14 +1,15 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { Loading } from "../../../components/Loading";
 import { BookEntity } from "../../../types/books";
 import CardBook from "../../../components/CardBook";
-import { useAuth } from "../../../contexts/authProvider";
 import { GET_BOOKS, GET_CATEGORY } from "../query";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/authContext";
 
 const CategoryDetail = () => {
     const { id } = useParams();
-    const { getUser } = useAuth();
+    const user = useContext(AuthContext);
 
     const category = useQuery(GET_CATEGORY, {
         variables: {
@@ -41,7 +42,7 @@ const CategoryDetail = () => {
         if (books.loading) return <Loading />
         if (books.error) return <p>{books.error.message}</p>
         return books.data.books.map((book: BookEntity) => {
-            return <CardBook userId={getUser().id} book={book} key={book.id} />
+            return <CardBook userId={user.id} book={book} key={book.id} />
         })
     }
     return (
