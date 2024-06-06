@@ -1,5 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-import { faAt, faFilter, faList, faMoneyBill, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@apollo/client";
+import { faAt, faList, faMoneyBill, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, MenuProps } from "antd";
@@ -8,14 +8,11 @@ import { AuthorEntity, BookEntity } from "../../types";
 import { CategoryEntity } from "../../types/category";
 import { Loading } from "../../components/Loading";
 import CardBook from "../../components/CardBook";
-import { useAuth } from "../../hooks/useAuth";
 import { GET_AUTHORS, GET_BOOKS, GET_CATEGORIES, GET_TOTAL_BOOKS } from "./query";
 import Paging from "../../components/Pagination";
 import { AuthContext } from "../../contexts/authContext";
 
 type MenuItem = Required<MenuProps>['items'][number];
-
-
 
 const Book = () => {
     const [authorFilter, setAuthorFilter] = useState<Array<number>>([]);
@@ -57,33 +54,7 @@ const Book = () => {
         }
     }
 
-    const totalVariables = {
-        variables: {
-            page,
-            limit,
-            sortBy: [
-                {
-                    field: "price",
-                    order: priceFilter
-                }
-            ],
-            filter: [
-                {
-                    field: "categories",
-                    in: categoriesFilter
-                },
-                {
-                    field: "authors",
-                    in: authorFilter
-                },
-                {
-                    field: "reviews",
-                    in: reviewFilter
-                }
-            ],
-            except: "-1"
-        }
-    }
+    console.log(JSON.stringify(variables));
 
     const renderStarRating = (rating: number) => {
         const stars = [];
@@ -170,7 +141,7 @@ const Book = () => {
     ];
 
     const books = useQuery(GET_BOOKS, variables);
-    const totalBooks = useQuery(GET_TOTAL_BOOKS, totalVariables)
+    const totalBooks = useQuery(GET_TOTAL_BOOKS, variables)
     const author_gql = useQuery(GET_AUTHORS);
     const category_gql = useQuery(GET_CATEGORIES);
 
@@ -239,9 +210,6 @@ const Book = () => {
                         const categoryId = category.map(category => {
                             return Number(category.split("_")[1]);
                         });
-
-                        console.log("deselected: ", item);
-
                         if (authorId.length === 0) setAuthorFilter(initAuthors);
                         else setAuthorFilter(authorId);
                         if (categoryId.length === 0) setCategoryFilter(initCategories);

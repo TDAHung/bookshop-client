@@ -97,3 +97,13 @@ query{
     }
 }
 `;
+
+export const CREATE_COMMENT = gql`
+mutation createReview($input: CreateReviewInput!){
+    createReview(createReviewInput: $input){
+        id,
+        rating,
+        comment,
+    }
+}
+`;

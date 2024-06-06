@@ -12,13 +12,18 @@ const BookRelatedCategory = ({ idCategories, id }: { idCategories: Array<string>
 
     const { loading, error, data } = useQuery(GET_BOOKS, {
         variables: {
-            limit: 5,
+            limit: 6,
             page: 1,
             filter: {
                 field: "categories",
                 in: idCategories.map(Number)
             },
-            sortBy: [],
+            sortBy: [
+                {
+                    field: "reviews",
+                    order: 'desc'
+                }
+            ],
             except: id
         }
     });
@@ -27,7 +32,7 @@ const BookRelatedCategory = ({ idCategories, id }: { idCategories: Array<string>
         if (error) return <p>{error.message}</p>
         if (loading) return <Loading />
         return data.books.map((book: BookEntity) => {
-            return <CardBook userId={user.id} key={book.id} book={book} />
+            return <CardBook userId={user?.id} key={book.id} book={book} />
         })
     }
 

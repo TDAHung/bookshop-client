@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { Loading } from "../../../components/Loading";
-import { Button, Carousel, InputNumber } from "antd";
+import { Carousel } from "antd";
 import { AuthorEntity } from "../../../types/authors";
 import { ImageEntity } from "../../../types/image";
 import './style.scss'
@@ -11,15 +11,22 @@ import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import BookRelatedCategory from "./BookRelatedCategory";
 import BookRelatedAuthor from "./BookRelatedAuthor";
 import BookReview from "./BookReview";
+import CartButton from "../../../components/CartButton";
 import { GET_BOOK } from "../query";
+import { CHECK_CART } from "../../../components/CartButton/query";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/authContext";
 
 const BookDetail = () => {
     const { id } = useParams();
+    const user = useContext(AuthContext)
     const { loading, error, data } = useQuery(GET_BOOK, {
         variables: {
             input: Number(id)
         }
     });
+
+    const cart = useQuery(CHECK_CART, { variables: { id: user?.id } });
 
     const idCategories = () => {
         if (loading) return null;
@@ -131,31 +138,26 @@ const BookDetail = () => {
                                 }
                             </Carousel>
                         </div>
-                        <div className="col-span-4 py-8">
-                            <h1 className="text-4xl font-bold mb-12">{data.book.title}</h1>
-                            <p className="text-gray-500 text-2xl mb-4">Authors: {renderAuthor()}</p>
-                            <p className="text-gray-500 text-2xl mb-4">Categories: {renderCategories()}</p>
-                            <p className="text-gray-500 text-2xl mb-4">Description: {data.book.description}</p>
-
-                            <p className="text-xl mb-4 text-yellow-500">{renderStarRating(Number(calculateAvgRating()))} {calculateAvgRating() || '0'}/5</p>
-
-                            <div className="text-red-500 text-xl mt-4 mb-4">
-                                {
-                                    renderPrice()
+                        <div className="col-span-4 py-8 flex flex-col justify-between">
+                            <div>
+                                <h1 className="text-4xl font-bold mb-12">{data.book.title}</h1>
+                                <p className="text-gray-500 text-2xl mb-4">Authors: {renderAuthor()}</p>
+                                <p className="text-gray-500 text-2xl mb-4">Categories: {renderCategories()}</p>
+                                <p className="text-gray-500 text-2xl mb-4">Description: {data.book.description}</p>
+                            </div>
+                            <div className="w-1/3">
+                                <p className="text-xl mb-4 text-yellow-500">{renderStarRating(Number(calculateAvgRating()))} {calculateAvgRating() || '0'}/5</p>
+                                <div className="text-red-500 text-xl mt-4 mb-4">
+                                    {renderPrice()}
+                                </div>
+                                {cart.error || cart.loading ? <Loading /> : <CartButton cartId={cart.data.cart.id} userId={user?.id} bookId={Number(id)} />
                                 }
-                            </div>
-                            <div className="flex items-center mb-4 text-lg">
-                                <span className="mr-4">Quantity: </span>
-                                <InputNumber min={1} defaultValue={1} />
-                            </div>
-                            <div className="flex space-x-4">
-                                <Button className="bg-indigo-500 text-white">Add to Cart</Button>
                             </div>
                         </div>
                     </div>
                     <BookRelatedCategory idCategories={idCategories()} id={id} />
                     <BookRelatedAuthor idAuthors={idAuthors()} id={id} />
-                    <BookReview reviews={data.book.reviews} />
+                    <BookReview reviews={data.book.reviews} id={Number(id)} />
                 </div>
     )
 }

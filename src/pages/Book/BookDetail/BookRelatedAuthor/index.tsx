@@ -18,7 +18,12 @@ const BookRelatedAuthor = ({ idAuthors, id }: { idAuthors: Array<string>, id: st
                 field: "authors",
                 in: idAuthors.map(Number)
             },
-            sortBy: [],
+            sortBy: [
+                {
+                    field: "reviews",
+                    order: 'desc'
+                }
+            ],
             except: id
         }
     });
@@ -27,7 +32,7 @@ const BookRelatedAuthor = ({ idAuthors, id }: { idAuthors: Array<string>, id: st
         if (error) return <p>{error.message}</p>
         if (loading) return <Loading />
         return data.books.map((book: BookEntity) => {
-            return <CardBook userId={user.id} key={book.id} book={book} />
+            return <CardBook userId={user?.id} key={book.id} book={book} />
         })
     }
 
