@@ -3,8 +3,6 @@ import PopularBook from "./PopularBooks";
 import PromotionBook from "./PromotionBooks";
 
 const Home = () => {
-
-
     return (
         <div>
             <PopularBook />

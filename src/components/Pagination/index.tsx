@@ -11,8 +11,6 @@ interface Props {
 
 const Paging = (
     { total, page, setPage, limit, setLimit }: Props) => {
-    console.log(total);
-    console.log(limit);
     return <Pagination
         defaultCurrent={page}
         total={total}

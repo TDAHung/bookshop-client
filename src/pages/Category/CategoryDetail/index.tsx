@@ -6,6 +6,7 @@ import CardBook from "../../../components/CardBook";
 import { GET_BOOKS, GET_CATEGORY } from "../query";
 import { useContext } from "react";
 import { AuthContext } from "../../../contexts/authContext";
+import { Empty } from 'antd'
 
 const CategoryDetail = () => {
     const { id } = useParams();
@@ -39,11 +40,21 @@ const CategoryDetail = () => {
     });
 
     const displayCategory = () => {
-        if (books.loading) return <Loading />
-        if (books.error) return <p>{books.error.message}</p>
-        return books.data.books.map((book: BookEntity) => {
-            return <CardBook userId={user.id} book={book} key={book.id} />
-        })
+        if (books.error || books.loading) return <Loading />
+        if (books.data.books.length == 0) return <div className="flex justify-center">
+            <Empty
+                description={
+                    <span>
+                        There are no books
+                    </span>
+                }
+            />
+        </div>
+        return <div className="grid grid-cols-6 gap-8 px-16">
+            {books.data.books.map((book: BookEntity) => {
+                return <CardBook userId={user.id} book={book} key={book.id} />
+            })}
+        </div>
     }
     return (
         category.error ? <p>{category.error.message}</p> :
@@ -65,9 +76,8 @@ const CategoryDetail = () => {
                     <div className="px-16 text-2xl border-l-4 border-indigo-500 my-8">
                         Books
                     </div>
-                    <div className="grid grid-cols-6 gap-8 px-16">
-                        {displayCategory()}
-                    </div>
+                    {displayCategory()}
+
                 </div>
     );
 }

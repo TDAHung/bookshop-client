@@ -31,11 +31,11 @@ const MostOrderBook = () => {
     }
 
     return (
-        <div className="bg-gradient-to-b from-indigo-200 py-4 px-12 rounded-xl">
+        <div className="bg-gradient-to-b from-red-500 to-blue-500 my-4 py-4 px-12 rounded-xl">
             <div className='grid grid-cols-5 gap-4'>
                 <div className='relative col-span-2'>
                     <div className='absolute bottom-0'>
-                        <h2 className="text-4xl font-semibold text-purple-900 mb-4">Our Popular Books</h2>
+                        <h2 className="text-4xl font-semibold text-purple-900 mb-4">Our Most Orders Books</h2>
                         <p className="text-purple-700 mb-8 text-lg">Most Orders</p>
                     </div>
                 </div>

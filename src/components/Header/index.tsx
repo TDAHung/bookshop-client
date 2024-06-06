@@ -27,6 +27,7 @@ const Header = () => {
     const { loading, error, data } = useQuery(ALL_CATEGORIES);
     const location = useLocation();
     const user = useContext(AuthContext);
+    const { logout } = useAuth();
 
     const renderCategories = () => {
         if (loading) return <Loading />
@@ -82,6 +83,9 @@ const Header = () => {
                         </Link>
                     }
                 </div>
+                {
+                    user ? <button className="login__button text-2xl rounded-xl ms-4 text-center" onClick={logout}>Logout</button> : null
+                }
             </div>
         </header>
     );

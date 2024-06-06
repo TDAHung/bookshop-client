@@ -31,7 +31,7 @@ const PopularBook = () => {
     }
 
     return (
-        <div className="bg-gradient-to-b from-indigo-200 py-4 px-12 rounded-xl">
+        <div className="bg-gradient-to-b from-red-500 to-blue-500 my-4 py-4 px-12 rounded-xl">
             <div className='grid grid-cols-5 gap-4'>
                 <div className='relative col-span-2'>
                     <div className='absolute bottom-0'>
@@ -44,7 +44,6 @@ const PopularBook = () => {
                         {displayPopularBook()}
                     </div>
                 </div>
-
             </div>
         </div>
     )

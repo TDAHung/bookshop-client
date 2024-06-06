@@ -24,6 +24,19 @@ const PromotionBook = () => {
         }
     });
     const user = useContext(AuthContext);
+
+    const renderTimezone = (date: Date) => {
+        return new Date(date).toLocaleString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+            timeZone: 'Asia/Ho_Chi_Minh'
+        });
+    }
     const displayPromotion = () => {
         return data.promotions.map((promotion: PromotionEntity) => {
             let content = "";
@@ -34,16 +47,23 @@ const PromotionBook = () => {
                 content += 'Sale At Same Discount: ';
                 content += `${promotion.type.saleValue}%`;
             }
-
             return <div key={promotion.id}>
-                <div className="px-16 text-2xl border-l-4 border-indigo-500 my-8">
-                    {content}
+                <div className="px-16 text-2xl flex border-l-4 border-indigo-500 my-8">
+                    <div>
+                        {content}
+                    </div>
+                    <div className='ms-16'>
+                        From: {renderTimezone(promotion.startDate)}
+                    </div>
+                    <div className='ms-16'>
+                        Due to: {renderTimezone(promotion.endDate)}
+                    </div>
                 </div>
                 <div className='grid grid-cols-6 gap-8'>
                     {
                         promotion.books.map((book: BookEntity) => {
                             return <CardBook
-                                userId={user.id}
+                                userId={user?.id}
                                 key={book.id}
                                 book={book}
                             />
