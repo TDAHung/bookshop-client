@@ -13,7 +13,6 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
 
     const { loading, error, data } = useQuery(CHECK_CART, { variables: { id: userId } });
 
-
     const renderStarRating = (rating: number) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -31,21 +30,21 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
     const renderPrice = () => {
         if (book?.promotion?.type) {
             if (book.promotion.type.saleType == "samePrice") {
-                return <div className="flex items-center">
+                return <div className="flex items-center p-2">
                     <div className="me-4 text-xl text-red-500">
                         ${(Number(book.promotion.type.saleValue))}
                     </div>
                     <div className="me-4 line-through">
-                        {book.price} USD
+                        ${book.price}
                     </div>
                 </div>
             } else {
-                return <div className="flex items-center">
+                return <div className="flex items-center p-2">
                     <div className="me-4 text-xl text-red-500">
                         ${(Number(book.price) - Number(book.price) * Number(book.promotion.type.saleValue) / 100).toFixed(2)}
                     </div>
                     <div className="me-4 line-through">
-                        {book.price} USD
+                        ${book.price}
                     </div>
                     <div className="bg-red-500 text-white p-2 rounded-xl">
                         -{book.promotion.type.saleValue}%
@@ -54,18 +53,18 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
             }
         } else {
             if (Number(book.discount)) {
-                return <div className="me-4 p-2 text-xl">
-                    {book.price} USD
+                return <div className="me-4 p-2 text-xl text-red-500">
+                    ${book.price}
                 </div>
             } else {
-                return <div className="flex items-center">
+                return <div className="flex items-center p-2">
                     <div className="me-4 text-xl text-red-500">
                         ${(Number(book.price) - Number(book.price) * Number(book.discount) / 100).toFixed(2)}
                     </div>
                     <div className="me-4 line-through">
-                        {book.price} USD
+                        ${book.price}
                     </div>
-                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                    <div className="bg-red-500 text-white rounded-xl">
                         -{book.discount}%
                     </div>
                 </div>
@@ -105,7 +104,6 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
         {
             !loading ? <CartButton userId={userId} bookId={book.id} cartId={data?.cart?.id} /> : null
         }
-
     </div>
 }
 export default CardBook;

@@ -1,13 +1,12 @@
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button, message } from 'antd';
 import { GET_CART as GET_CART_POPUP } from '../CartPopUp/query';
 import { CHECK_CART, CHECK_CART_ITEM } from './query';
 import { CREATE_CART, CREATE_CART_ITEM } from './mutation';
 import { GET_CART } from '../../pages/Cart/query';
 
+const CartButton = ({ userId, bookId, cartId }: { userId: number | undefined, bookId: number, cartId: number }) => {
 
-
-const CartButton = ({ userId, bookId, cartId }: { userId: number, bookId: number, cartId: number }) => {
     const [createCart] = useMutation(CREATE_CART, {
         refetchQueries: [
             { query: CHECK_CART, variables: { id: userId } },
@@ -27,7 +26,8 @@ const CartButton = ({ userId, bookId, cartId }: { userId: number, bookId: number
         variables: {
             bookId,
             cartId
-        }
+        },
+        skip: !userId
     });
 
     const handleAddToCart = async () => {
@@ -44,9 +44,7 @@ const CartButton = ({ userId, bookId, cartId }: { userId: number, bookId: number
                     },
                 });
                 message.success('Book added to cart successfully');
-            }
-
-            if (cartId) {
+            } else {
                 const { data: checkCartItemData } = await checkCartItem.refetch({
                     variables: { bookId, cartId }
                 });
@@ -61,6 +59,10 @@ const CartButton = ({ userId, bookId, cartId }: { userId: number, bookId: number
                     message.success('Book added to cart successfully');
                 }
             }
+
+            // if (cartId) {
+
+            // }
         } catch (error) {
             console.log(error);
             message.error('Failed to add book to cart');

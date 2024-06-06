@@ -17,6 +17,7 @@ query showCart($id: Int!){
                 title,
                 price,
                 discount,
+                quantity,
                 images{
                     name,
                     url,

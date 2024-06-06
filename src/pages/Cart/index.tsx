@@ -9,20 +9,21 @@ import { AuthContext } from "../../contexts/authContext";
 
 const Cart = () => {
     const user = useContext(AuthContext);
+
     const { loading, error, data } = useQuery(GET_CART, {
         variables: {
             id: user.id
         }
     });
 
+
     const renderCartItems = () => {
         return data.cart.cartItems.map((cartItem: any) => {
-            console.log(cartItem.book.promotion);
             return <CartItem
                 key={cartItem.id}
                 userId={user.id}
                 cartItemId={cartItem.id}
-                bookId={cartItem.book.id}
+                bookQuantity={cartItem.book.quantity}
                 title={cartItem.book.title}
                 price={cartItem.book.price}
                 discount={cartItem.book.discount}

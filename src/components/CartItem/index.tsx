@@ -11,7 +11,7 @@ import { PromotionEntity } from "../../types/promotion";
 interface CartItemProps {
     userId: number;
     cartItemId: number;
-    bookId: number;
+    bookQuantity: number;
     title: string;
     price: number;
     discount: number;
@@ -20,7 +20,7 @@ interface CartItemProps {
     promotion: PromotionEntity;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, discount, images, quantity, promotion }) => {
+const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, discount, bookQuantity, images, quantity, promotion }) => {
 
     const [updateCartItem] = useMutation(UPDATE_CART_ITEM, {
         refetchQueries: [{ query: GET_CART, variables: { id: userId } }],
@@ -31,8 +31,12 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
     const [quantityUpdate, setQuantityUpdate] = useState<number>(quantity);
 
     const handleUpdateQuantity = async (value: number | null) => {
-        setQuantityUpdate(Number(value));
+        if (Number(value) > bookQuantity && value != null) {
+            message.error("Quantity is higher than Our book quantity");
+            return;
+        }
         try {
+            setQuantityUpdate(Number(value));
             await updateCartItem({
                 variables: {
                     input: {
@@ -76,7 +80,7 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                         ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(promotion.type.saleValue) / 100).toFixed(2)}
                     </div>
                     <div className="me-4 line-through">
-                        ${Number(price) * quantityUpdate}
+                        ${(Number(price) * quantityUpdate).toFixed(2)}
                     </div>
                     <div className="bg-red-500 text-white p-2 rounded-xl">
                         -{promotion.type.saleValue}%
@@ -90,11 +94,11 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                 </div>
             } else {
                 return <div className="flex items-center">
-                    <div className="me-4 text-xl text-red-500">
+                    <div className="me-4 text-xl">
                         ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(discount) / 100).toFixed(2)}
                     </div>
-                    <div className="me-4 line-through">
-                        ${(price * quantityUpdate).toFixed(2)}
+                    <div className="me-4 line-through text-red-500">
+                        ${(Number(price) * quantityUpdate).toFixed(2)}
                     </div>
                     <div className="bg-red-500 text-white p-2 rounded-xl">
                         -{discount}%
@@ -108,7 +112,7 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
         <div className="border-b-2 border-indigo-500">
             <div key={cartItemId} className="grid grid-cols-3 gap-4 m-4 items-center">
                 <div className="grid-span-3">
-                    <Carousel className="shadow-lg">
+                    <Carousel className="shadow-lg" autoplay={true}>
                         {
                             images.map((image: ImageEntity) => {
                                 return <div key={image.key}>
@@ -131,9 +135,13 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                     <div className="m-2">
                         <InputNumber
                             onChange={(value) => { handleUpdateQuantity(value) }}
-                            size="small" min={1} defaultValue={quantityUpdate} />
+                            size="small"
+                            min={1}
+                            defaultValue={quantityUpdate}
+                            value={quantityUpdate}
+                        />
                     </div>
-                    <div className="text-base text-red-500">
+                    <div className="text-base">
                         {
                             renderPrice()
                         }
