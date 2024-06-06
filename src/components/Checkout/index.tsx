@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import { pages } from "../../utils/constant";
 import { Link } from "react-router-dom";
+import { PromotionEntity } from "../../types/promotion";
 
 
 interface CartItemProps {
@@ -9,13 +10,20 @@ interface CartItemProps {
         price: number;
         discount: number;
         quantity: number;
+        promotion: PromotionEntity
     }
 }
 
 const Checkout = ({ cartItems }: { cartItems: CartItemProps[] }) => {
     let total = 0;
     cartItems.forEach(({ book, quantity }) => {
-        total += ((book.price * quantity) - (book.price * quantity) * (book.discount / 100));
+        if (book.promotion?.type) {
+            if (book.promotion.type.saleType == "samePrice")
+                total += Number(book.promotion.type.saleValue);
+            else total += ((book.price * quantity) - (book.price * quantity) * (Number(book.promotion.type.saleValue) / 100));
+        } else {
+            total += ((book.price * quantity) - (book.price * quantity) * (book.discount / 100));
+        }
     });
     return (
         <div>

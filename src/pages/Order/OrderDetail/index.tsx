@@ -42,6 +42,7 @@ const OrderDetail = () => {
                 discount={orderItem.book.discount}
                 images={orderItem.book.images}
                 quantity={orderItem.quantity}
+                promotion={orderItem.book.promotion}
             />
         });
     }

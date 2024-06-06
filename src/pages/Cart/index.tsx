@@ -17,6 +17,7 @@ const Cart = () => {
 
     const renderCartItems = () => {
         return data.cart.cartItems.map((cartItem: any) => {
+            console.log(cartItem.book.promotion);
             return <CartItem
                 key={cartItem.id}
                 userId={user.id}
@@ -27,6 +28,7 @@ const Cart = () => {
                 discount={cartItem.book.discount}
                 images={cartItem.book.images}
                 quantity={cartItem.quantity}
+                promotion={cartItem.book.promotion}
             />
         });
     }

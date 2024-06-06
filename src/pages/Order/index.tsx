@@ -4,13 +4,10 @@ import { AuthContext } from "../../contexts/authContext";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS } from "./query";
 import { OrderEntity } from "../../types";
-
 import {
     CheckCircleOutlined,
-    ClockCircleOutlined,
     CloseCircleOutlined,
     ExclamationCircleOutlined,
-    MinusCircleOutlined,
     SyncOutlined,
     CarOutlined,
 } from '@ant-design/icons';
@@ -52,7 +49,7 @@ const Order = () => {
                     SHIPPING
                 </Tag>
             case "SHIPPED":
-                return <Tag icon={<CarOutlined />}>
+                return <Tag icon={<CarOutlined />} color="gold">
                     SHIPPED
                 </Tag>
             default:

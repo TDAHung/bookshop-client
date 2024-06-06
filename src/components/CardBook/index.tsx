@@ -28,6 +28,51 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
         return stars;
     }
 
+    const renderPrice = () => {
+        if (book?.promotion?.type) {
+            if (book.promotion.type.saleType == "samePrice") {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(book.promotion.type.saleValue))}
+                    </div>
+                    <div className="me-4 line-through">
+                        {book.price} USD
+                    </div>
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(book.price) - Number(book.price) * Number(book.promotion.type.saleValue) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        {book.price} USD
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{book.promotion.type.saleValue}%
+                    </div>
+                </div>
+            }
+        } else {
+            if (Number(book.discount)) {
+                return <div className="me-4 p-2 text-xl">
+                    {book.price} USD
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(book.price) - Number(book.price) * Number(book.discount) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        {book.price} USD
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{book.discount}%
+                    </div>
+                </div>
+            }
+        }
+    }
+
     return <div key={book.id} className="relative">
         <Carousel
             className="h-full shadow-lg"
@@ -47,25 +92,11 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
                     {book.title}
                 </Link>
             </div>
-            <div className="text-base text-red-500">
-                {
-                    Number(book.discount) == 0 ? <div className="me-4 p-2 text-xl">
-                        {book.price} USD
-                    </div> : <div className="flex items-center">
-                        <div className="me-4 text-xl">
-                            {(Number(book.price) - Number(book.price) * Number(book.discount) / 100).toFixed(2)} USD
-                        </div>
-                        <div className="me-4 line-through">
-                            {book.price} USD
-                        </div>
-                        <div className="bg-red-500 text-white p-2 rounded-xl">
-                            -{book.discount}%
-                        </div>
-                    </div>
-                }
+            <div className="text-base">
+                {renderPrice()}
             </div>
             <div className="text-base text-yellow-400">
-                {renderStarRating(Number(book.avgRating))} {Number(book.avgRating) || '0'}/5
+                {renderStarRating(Number(book.avgRating))} {Number(book.avgRating).toFixed(2) || '0'}/5
             </div>
             <div className="text-base">
                 quantity: {book.quantity}

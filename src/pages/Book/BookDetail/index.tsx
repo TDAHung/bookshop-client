@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { Loading } from "../../../components/Loading";
 import { Button, Carousel, InputNumber } from "antd";
@@ -67,7 +67,52 @@ const BookDetail = () => {
         data.book.reviews.forEach(({ rating }: { rating: any }) => {
             avgRating += Number(rating);
         });
-        return avgRating / data.book.reviews.length;
+        return (avgRating / data.book.reviews.length).toFixed(2);
+    }
+
+    const renderPrice = () => {
+        if (data.book?.promotion?.type) {
+            if (data.book.promotion.type.saleType == "samePrice") {
+                return <div className="flex items-center">
+                    <div className="me-4 text-3xl text-red-500">
+                        ${(Number(data.book.promotion.type.saleValue))}
+                    </div>
+                    <div className="me-4 line-through">
+                        ${data.book.price}
+                    </div>
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-3xl text-red-500">
+                        ${(Number(data.book.price) - Number(data.book.price) * Number(data.book.promotion.type.saleValue) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        {data.book.price}
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{data.book.promotion.type.saleValue}%
+                    </div>
+                </div>
+            }
+        } else {
+            if (Number(data.book.discount)) {
+                return <div className="me-4 p-2 text-xl">
+                    ${data.book.price}
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-3xl text-red-500">
+                        ${(Number(data.book.price) - Number(data.book.price) * Number(data.book.discount) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        ${data.book.price}
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{data.book.discount}%
+                    </div>
+                </div>
+            }
+        }
     }
 
     return (
@@ -92,23 +137,11 @@ const BookDetail = () => {
                             <p className="text-gray-500 text-2xl mb-4">Categories: {renderCategories()}</p>
                             <p className="text-gray-500 text-2xl mb-4">Description: {data.book.description}</p>
 
-                            <p className="text-xl mb-4 text-yellow-500">{renderStarRating(calculateAvgRating())} {calculateAvgRating() || '0'}/5</p>
+                            <p className="text-xl mb-4 text-yellow-500">{renderStarRating(Number(calculateAvgRating()))} {calculateAvgRating() || '0'}/5</p>
 
                             <div className="text-red-500 text-xl mt-4 mb-4">
                                 {
-                                    Number(data.book.discount) == 0 ? <span className="text-4xl me-4">
-                                        {data.book.price} USD
-                                    </span> : <div className="flex items-center">
-                                        <div className="text-4xl me-4">
-                                            {(Number(data.book.price) - Number(data.book.price) * Number(data.book.discount) / 100).toFixed(2)} USD
-                                        </div>
-                                        <div className="me-4 line-through">
-                                            {data.book.price} USD
-                                        </div>
-                                        <div className="bg-red-500 text-white p-2 rounded-xl">
-                                            -{data.book.discount}%
-                                        </div>
-                                    </div>
+                                    renderPrice()
                                 }
                             </div>
                             <div className="flex items-center mb-4 text-lg">

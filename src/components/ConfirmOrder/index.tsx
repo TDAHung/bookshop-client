@@ -1,8 +1,6 @@
 import { Button } from "antd";
-import { ImageEntity } from "../../types";
-import { pages } from "../../utils/constant";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { PromotionEntity } from "../../types/promotion";
 
 
 interface CartItemProps {
@@ -11,6 +9,7 @@ interface CartItemProps {
         price: number;
         discount: number;
         quantity: number;
+        promotion: PromotionEntity;
     },
 }
 
@@ -32,7 +31,13 @@ const ConfirmOrder = (
         let totalQuantity = 0;
         cartItems.forEach(({ book, quantity }) => {
             totalQuantity += quantity;
-            total += ((book.price * quantity) - (book.price * quantity) * (book.discount / 100));
+            if (book?.promotion?.type) {
+                if (book.promotion.type.saleType == "samePrice")
+                    total += Number(book.promotion.type.saleValue);
+                else total += ((book.price * quantity) - (book.price * quantity) * (Number(book.promotion.type.saleValue) / 100));
+            } else {
+                total += ((book.price * quantity) - (book.price * quantity) * (book.discount / 100));
+            }
         });
         setQuantityTotal(totalQuantity);
         setOrderTotal(total);

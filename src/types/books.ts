@@ -1,6 +1,7 @@
 import { BookAuthorEntity } from "./bookAuthor";
 import { BookCategoryEntity } from "./bookCategory";
 import { ImageEntity } from "./image"
+import { PromotionEntity } from "./promotion";
 import { ReviewEntity } from "./review";
 
 export interface BookEntity {
@@ -15,6 +16,7 @@ export interface BookEntity {
     quantity: number
     reviews: [ReviewEntity]
     title: string;
+    promotion: PromotionEntity;
     createdAt: Date;
     updatedAt: Date
 }

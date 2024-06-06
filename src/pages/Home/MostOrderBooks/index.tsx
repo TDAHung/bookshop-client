@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 import { pages } from '../../../utils/constant';
 import { GET_BOOKS } from '../query';
 
-const PopularBook = () => {
-    const displayPopularBook = () => {
+const MostOrderBook = () => {
+    const displayMostOrderBook = () => {
         const { loading, error, data } = useQuery(GET_BOOKS, {
             variables: {
-                limit: 8,
+                limit: 4,
                 sortBy: [
                     {
-                        "field": "reviews",
+                        "field": "orders",
                         "order": "asc"
                     }
                 ]
@@ -36,18 +36,17 @@ const PopularBook = () => {
                 <div className='relative col-span-2'>
                     <div className='absolute bottom-0'>
                         <h2 className="text-4xl font-semibold text-purple-900 mb-4">Our Popular Books</h2>
-                        <p className="text-purple-700 mb-8 text-lg">Most Stars</p>
+                        <p className="text-purple-700 mb-8 text-lg">Most Orders</p>
                     </div>
                 </div>
                 <div className='col-span-3'>
                     <div className="grid grid-cols-4 gap-16">
-                        {displayPopularBook()}
+                        {displayMostOrderBook()}
                     </div>
                 </div>
-
             </div>
         </div>
     )
 }
 
-export default PopularBook;
+export default MostOrderBook;

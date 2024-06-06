@@ -6,6 +6,7 @@ import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { DELETE_CART_ITEM, UPDATE_CART_ITEM } from "./mutation";
 import { GET_CART } from "../../pages/Cart/query";
+import { PromotionEntity } from "../../types/promotion";
 
 interface CartItemProps {
     userId: number;
@@ -16,10 +17,10 @@ interface CartItemProps {
     discount: number;
     images: ImageEntity[];
     quantity: number;
+    promotion: PromotionEntity;
 }
 
-
-const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, discount, images, quantity }) => {
+const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, discount, images, quantity, promotion }) => {
 
     const [updateCartItem] = useMutation(UPDATE_CART_ITEM, {
         refetchQueries: [{ query: GET_CART, variables: { id: userId } }],
@@ -40,7 +41,6 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                     }
                 }
             });
-            message.success("Quantity updated successfully");
         } catch (error) {
             message.error("Failed to update quantity");
         }
@@ -56,6 +56,51 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
             message.success("Cart item deleted successfully");
         } catch (error) {
             message.error("Failed to delete cart item");
+        }
+    }
+
+    const renderPrice = () => {
+        if (promotion?.type) {
+            if (promotion.type.saleType == "samePrice") {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(promotion.type.saleValue) * quantityUpdate)}
+                    </div>
+                    <div className="me-4 line-through">
+                        ${price}
+                    </div>
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(promotion.type.saleValue) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        ${Number(price) * quantityUpdate}
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{promotion.type.saleValue}%
+                    </div>
+                </div>
+            }
+        } else {
+            if (Number(discount) == 0) {
+                return <div className="me-4 p-2 text-xl">
+                    ${price * quantityUpdate}
+                </div>
+            } else {
+                return <div className="flex items-center">
+                    <div className="me-4 text-xl text-red-500">
+                        ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(discount) / 100).toFixed(2)}
+                    </div>
+                    <div className="me-4 line-through">
+                        ${(price * quantityUpdate).toFixed(2)}
+                    </div>
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
+                        -{discount}%
+                    </div>
+                </div>
+            }
         }
     }
 
@@ -90,19 +135,7 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                     </div>
                     <div className="text-base text-red-500">
                         {
-                            Number(discount) == 0 ? <div className="me-4 p-2 text-2xl">
-                                ${price * quantityUpdate}
-                            </div> : <div className="flex items-center">
-                                <div className="me-4 text-2xl">
-                                    ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(discount) / 100).toFixed(2)}
-                                </div>
-                                <div className="me-4 line-through">
-                                    ${(price * quantityUpdate).toFixed(2)}
-                                </div>
-                                <div className="bg-red-500 text-white p-2 rounded-xl">
-                                    -{discount}%
-                                </div>
-                            </div>
+                            renderPrice()
                         }
                     </div>
                 </div>

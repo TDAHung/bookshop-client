@@ -225,7 +225,6 @@ const Book = () => {
                         const categoryId = category.map(category => {
                             return Number(category.split("_")[1]);
                         });
-                        console.log("selected: ", authorId, categoryId);
                         if (authorId.length === 0) setAuthorFilter(initAuthors);
                         else setAuthorFilter(authorId);
                         if (categoryId.length === 0) setCategoryFilter(initCategories);

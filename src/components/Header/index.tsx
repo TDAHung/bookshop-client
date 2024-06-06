@@ -76,7 +76,7 @@ const Header = () => {
                 <CartPopUp id={user?.id} />
                 <div className="login__button text-2xl rounded-xl ms-4 text-center">
                     {
-                        user ? <Link to={pages.ORDER} className="">{user.firstName} {user.lastName}</Link> : <Link to={pages.LOGIN}>
+                        user ? <Link to={pages.ORDERS} className="">{user.firstName} {user.lastName}</Link> : <Link to={pages.LOGIN}>
                             <FontAwesomeIcon icon={faPersonWalking} />
                             <span className="ms-4">Login</span>
                         </Link>

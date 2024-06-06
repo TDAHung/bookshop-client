@@ -21,6 +21,12 @@ query showCart($id: Int!){
                     name,
                     url,
                     key
+                },
+                promotion{
+                    type{
+                        saleType,
+                        saleValue
+                    }
                 }
             }
         }
@@ -79,6 +85,12 @@ query order($input: Int!){
                     url,
                     key,
                     name
+                },
+                promotion{
+                    type{
+                        saleType,
+                        saleValue
+                    }
                 }
             }
         }

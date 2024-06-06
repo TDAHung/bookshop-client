@@ -21,6 +21,12 @@ query showCart($id: Int!){
                     name,
                     url,
                     key
+                },
+                promotion{
+                    type{
+                        saleType,
+                        saleValue
+                    }
                 }
             }
         }

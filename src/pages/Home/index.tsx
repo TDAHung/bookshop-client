@@ -1,4 +1,6 @@
+import MostOrderBook from "./MostOrderBooks";
 import PopularBook from "./PopularBooks";
+import PromotionBook from "./PromotionBooks";
 
 const Home = () => {
 
@@ -6,7 +8,8 @@ const Home = () => {
     return (
         <div>
             <PopularBook />
-            <h1>Home Page</h1>
+            <MostOrderBook />
+            <PromotionBook />
         </div>
     )
 }

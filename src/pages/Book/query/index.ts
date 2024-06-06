@@ -16,6 +16,12 @@ query showAll($page: Float!, $limit: Float!, $sortBy: [SortBy!]!, $filter: [Filt
           size,
           url
         },
+        promotion{
+            type{
+                saleType,
+                saleValue
+            }
+        }
     }
 }
 `;
@@ -55,6 +61,12 @@ query showOne($input: Int!){
                 lastName
             },
             createdAt
+        },
+        promotion{
+            type{
+                saleType,
+                saleValue
+            }
         }
     }
 }

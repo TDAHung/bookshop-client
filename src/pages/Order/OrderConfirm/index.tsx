@@ -58,6 +58,7 @@ const OrderConfirm = () => {
                 discount={cartItem.book.discount}
                 images={cartItem.book.images}
                 quantity={cartItem.quantity}
+                promotion={cartItem.book.promotion}
             />
         });
     }
