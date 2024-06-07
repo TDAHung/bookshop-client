@@ -71,6 +71,9 @@ const Header = () => {
                     <li className={`mx-8 nav__link rounded-xl ${path[1] === pages.BOOK ? 'active' : ''}`}>
                         <Link to={pages.BOOK}>Book</Link>
                     </li>
+                    <li className={`mx-8 nav__link rounded-xl ${path[1] === pages.ABOUT ? 'active' : ''}`}>
+                        <Link to={pages.ABOUT}>About Us</Link>
+                    </li>
                 </ul>
             </nav>
             <div className="flex">

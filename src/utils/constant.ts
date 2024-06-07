@@ -11,5 +11,6 @@ export const pages = {
     ORDER: 'order',
     CART: 'cart',
     LOGIN: 'login',
-    REGISTER: 'register'
+    REGISTER: 'register',
+    ABOUT: 'about'
 };

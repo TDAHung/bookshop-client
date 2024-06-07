@@ -16,6 +16,7 @@ import { PrivateRoute } from './components/Route';
 import { AuthProvider } from './contexts/authContext';
 import OrderConfirm from './pages/Order/OrderConfirm';
 import OrderDetail from './pages/Order/OrderDetail';
+import About from './pages/About';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path={pages.ORDERS} element={<Order />} />
         <Route path={pages.ORDER} element={<OrderConfirm />} />
         <Route path={`${pages.ORDER}/:id`} element={<OrderDetail />} />
+        <Route path={pages.ABOUT} element={<About />} />
       </Route>
     </Routes>
   );
