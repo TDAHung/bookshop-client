@@ -12,5 +12,6 @@ export const pages = {
     CART: 'cart',
     LOGIN: 'login',
     REGISTER: 'register',
-    ABOUT: 'about'
+    ABOUT: 'about',
+    COOKIE_ORDER: 'order-cookie'
 };

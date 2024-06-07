@@ -12,16 +12,21 @@ import AuthorDetail from './pages/Author/AuthorDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
-import { PrivateRoute } from './components/Route';
-import { AuthProvider } from './contexts/authContext';
+import { PublicRoute, PrivateRoute } from './components/Route';
+import { AuthContext, AuthProvider } from './contexts/authContext';
 import OrderConfirm from './pages/Order/OrderConfirm';
-import OrderDetail from './pages/Order/OrderDetail';
+import OrderDetail from "./pages/Order/OrderDetail/";
 import About from './pages/About';
+import Register from './pages/Register';
+import { useContext } from 'react';
+import OrderConfirmCookie from './pages/Order/OrderConfirmCookie';
 
 function App() {
+  const user = useContext(AuthContext);
   return (
     <Routes>
-      <Route path={pages.LOGIN} element={<Login />} />
+      <Route path={pages.LOGIN} element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path={pages.REGISTER} element={<PublicRoute><Register /></PublicRoute>} />
       <Route path='/' element={
         <AuthProvider>
           <Dashboard />
@@ -36,7 +41,8 @@ function App() {
         <Route path={`${pages.CATEGORY}/:id`} element={<CategoryDetail />} />
         <Route path={pages.CART} element={<Cart />} />
         <Route path={pages.ORDERS} element={<Order />} />
-        <Route path={pages.ORDER} element={<OrderConfirm />} />
+        <Route path={pages.ORDER} element={<PrivateRoute><OrderConfirm /></PrivateRoute>} />
+        <Route path={pages.COOKIE_ORDER} element={<OrderConfirmCookie />} />
         <Route path={`${pages.ORDER}/:id`} element={<OrderDetail />} />
         <Route path={pages.ABOUT} element={<About />} />
       </Route>

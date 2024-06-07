@@ -8,6 +8,7 @@ import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons"
 import CartButton from "../CartButton"
 import { CHECK_CART } from "../CartButton/query"
 import { useQuery } from "@apollo/client"
+import CartButtonCookie from "../CartButtonCookie"
 
 const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
 
@@ -64,7 +65,7 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
                     <div className="me-4 line-through">
                         ${book.price}
                     </div>
-                    <div className="bg-red-500 text-white rounded-xl">
+                    <div className="bg-red-500 text-white p-2 rounded-xl">
                         -{book.discount}%
                     </div>
                 </div>
@@ -102,7 +103,8 @@ const CardBook = ({ userId, book }: { userId: number, book: BookEntity }) => {
             </div>
         </div>
         {
-            !loading ? <CartButton userId={userId} bookId={book.id} cartId={data?.cart?.id} /> : null
+            userId ? !loading ? <CartButton userId={userId} bookId={book.id} cartId={data?.cart?.id} /> : null :
+                <CartButtonCookie book={book} />
         }
     </div>
 }

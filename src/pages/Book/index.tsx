@@ -24,7 +24,7 @@ const Book = () => {
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]);
     const [page, setPage] = useState<number>(1);
-    const [limit, setLimit] = useState<number>(10);
+    const [limit, setLimit] = useState<number>(12);
     const user = useContext(AuthContext);
     const variables = {
         variables: {
@@ -53,8 +53,6 @@ const Book = () => {
             except: "-1"
         }
     }
-
-    console.log(JSON.stringify(variables));
 
     const renderStarRating = (rating: number) => {
         const stars = [];
@@ -177,7 +175,7 @@ const Book = () => {
         if (books.loading) return <Loading />
         if (books.error) return <p>{books.error.message}</p>
         return books.data.books.map((book: BookEntity) => {
-            return <CardBook userId={user.id} book={book} key={book.id} />
+            return <CardBook userId={user?.id} book={book} key={book.id} />
         })
     }
 

@@ -38,10 +38,20 @@ const OrderConfirm = () => {
     useEffect(() => {
         if (!error && !loading) {
             setOrderItems(data.cart.cartItems.map((cartItem: any) => {
+
+                let finalPrice = 0;
+                if (cartItem.book.promotion) {
+                    if (cartItem.book.promotion.saleType == 'samePrice') finalPrice = Number(cartItem.book.promotion.saleValue);
+                    else {
+                        finalPrice = Number((cartItem.book.price - (cartItem.book.price * (cartItem.book.promotion.saleValue / 100))).toFixed(2))
+                    }
+                } else {
+                    finalPrice = Number((cartItem.book.price - (cartItem.book.price * (cartItem.book.discount / 100))).toFixed(2));
+                }
                 return {
                     quantity: cartItem.quantity,
                     bookId: cartItem.book.id,
-                    price: Number((cartItem.book.price - (cartItem.book.price * (cartItem.book.discount / 100))).toFixed(2))
+                    price: finalPrice
                 }
             }));
         }
@@ -73,6 +83,7 @@ const OrderConfirm = () => {
                 await createOrder({
                     variables: {
                         createOrder: {
+                            userId: user.id,
                             address: formValues.address,
                             firstName: formValues.firstName,
                             lastName: formValues.lastName,

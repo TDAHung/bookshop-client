@@ -6,13 +6,13 @@ import { useAuth } from "../../hooks/useAuth";
 export const PrivateRoute = ({ children }: { children: ReactNode }) => {
     const { getUser } = useAuth();
     const user = getUser();
-    const authenticated = sessionStorage.getItem('onLogin');
     if (!user) return <Navigate to={pages.HOME} replace />
     return children;
 }
 
 export const PublicRoute = ({ children }: { children: ReactNode }) => {
-    const authenticated = sessionStorage.getItem('onLogin');
-    if (authenticated) return <Navigate to={pages.HOME} replace />
+    const { getUser } = useAuth();
+    const user = getUser();
+    if (user) return <Navigate to={pages.HOME} replace />
     return children;
 }

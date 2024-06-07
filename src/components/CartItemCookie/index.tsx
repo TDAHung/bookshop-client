@@ -2,49 +2,24 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Carousel, InputNumber, message } from "antd";
 import { ImageEntity } from "../../types";
-import { useMutation } from "@apollo/client";
 import { useState } from "react";
-import { DELETE_CART_ITEM, UPDATE_CART_ITEM } from "./mutation";
-import { GET_CART } from "../../pages/Cart/query";
 import { PromotionEntity } from "../../types/promotion";
+import { useCookies } from "react-cookie";
 
-interface CartItemProps {
-    userId: number;
-    cartItemId: number;
-    bookQuantity: number;
-    title: string;
-    price: number;
-    discount: number;
-    images: ImageEntity[];
-    quantity: number;
-    promotion: PromotionEntity;
-}
-
-const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, discount, bookQuantity, images, quantity, promotion }) => {
-
-    const [updateCartItem] = useMutation(UPDATE_CART_ITEM, {
-        refetchQueries: [{ query: GET_CART, variables: { id: userId } }],
-    });
-    const [deleteCartItem] = useMutation(DELETE_CART_ITEM, {
-        refetchQueries: [{ query: GET_CART, variables: { id: userId } }],
-    });
-    const [quantityUpdate, setQuantityUpdate] = useState<number>(quantity);
+const CartItemCookie: React.FC<any> = ({ cartItem, index }) => {
+    const [quantityUpdate, setQuantityUpdate] = useState<number>(cartItem.quantity);
+    const [cookie, setCookie, removeCookie] = useCookies(['cart']);
 
     const handleUpdateQuantity = async (value: number | null) => {
-        if (Number(value) > bookQuantity && value != null) {
+        if (Number(value) > cartItem.book.quantity && value != null) {
             message.error("Quantity is higher than Our book quantity");
             return;
         }
         try {
+            const cart = cookie.cart;
+            cart[index].quantity = quantityUpdate;
+            setCookie('cart', cart, { path: "/", maxAge: 3600 * 24, secure: true, sameSite: "strict" })
             setQuantityUpdate(Number(value));
-            await updateCartItem({
-                variables: {
-                    input: {
-                        id: cartItemId,
-                        quantity: Number(value)
-                    }
-                }
-            });
         } catch (error) {
             message.error("Failed to update quantity");
         }
@@ -52,11 +27,9 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
 
     const handleDeleteCartItem = async (id: number) => {
         try {
-            await deleteCartItem({
-                variables: {
-                    id: id
-                }
-            });
+            const cart = cookie.cart;
+            cart.splice(index, 1);
+            setCookie('cart', cart, { path: "/", maxAge: 3600 * 24, secure: true, sameSite: "strict" })
             message.success("Cart item deleted successfully");
         } catch (error) {
             message.error("Failed to delete cart item");
@@ -64,44 +37,44 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
     }
 
     const renderPrice = () => {
-        if (promotion?.type) {
-            if (promotion.type.saleType == "samePrice") {
+        if (cartItem.book.promotion?.type) {
+            if (cartItem.book.promotion.type.saleType == "samePrice") {
                 return <div className="flex items-center">
                     <div className="me-4 text-xl text-red-500">
-                        ${(Number(promotion.type.saleValue) * quantityUpdate)}
+                        ${(Number(cartItem.book.promotion.type.saleValue) * quantityUpdate)}
                     </div>
                     <div className="me-4 line-through">
-                        ${price}
+                        ${cartItem.book.price}
                     </div>
                 </div>
             } else {
                 return <div className="flex items-center">
                     <div className="me-4 text-xl text-red-500">
-                        ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(promotion.type.saleValue) / 100).toFixed(2)}
+                        ${(Number(cartItem.book.price * quantityUpdate) - Number(cartItem.book.price * quantityUpdate) * Number(cartItem.book.promotion.type.saleValue) / 100).toFixed(2)}
                     </div>
                     <div className="me-4 line-through">
-                        ${(Number(price) * quantityUpdate).toFixed(2)}
+                        ${(Number(cartItem.book.price) * quantityUpdate).toFixed(2)}
                     </div>
                     <div className="bg-red-500 text-white p-2 rounded-xl">
-                        -{promotion.type.saleValue}%
+                        -{cartItem.book.promotion.type.saleValue}%
                     </div>
                 </div>
             }
         } else {
-            if (Number(discount) == 0) {
+            if (Number(cartItem.book.discount) == 0) {
                 return <div className="me-4 p-2 text-xl">
-                    ${price * quantityUpdate}
+                    ${cartItem.book.price * quantityUpdate}
                 </div>
             } else {
                 return <div className="flex items-center">
                     <div className="me-4 text-xl text-red-500">
-                        ${(Number(price * quantityUpdate) - Number(price * quantityUpdate) * Number(discount) / 100).toFixed(2)}
+                        ${(Number(cartItem.book.price * quantityUpdate) - Number(cartItem.book.price * quantityUpdate) * Number(cartItem.book.discount) / 100).toFixed(2)}
                     </div>
                     <div className="me-4 line-through">
-                        ${(Number(price) * quantityUpdate).toFixed(2)}
+                        ${(Number(cartItem.book.price) * quantityUpdate).toFixed(2)}
                     </div>
                     <div className="bg-red-500 text-white p-2 rounded-xl">
-                        -{discount}%
+                        -{cartItem.book.discount}%
                     </div>
                 </div>
             }
@@ -110,11 +83,11 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
 
     return (
         <div className="border-b-2 border-indigo-500">
-            <div key={cartItemId} className="grid grid-cols-3 gap-4 m-4 items-center">
+            <div key={index} className="grid grid-cols-3 gap-4 m-4 items-center">
                 <div className="grid-span-3">
                     <Carousel className="shadow-lg" autoplay={true}>
                         {
-                            images.map((image: ImageEntity) => {
+                            cartItem.book.images.map((image: ImageEntity) => {
                                 return <div key={image.key}>
                                     <img src={image.url} className="h-48 rounded-2xl" alt={image.name} />
                                 </div>
@@ -124,10 +97,10 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
                 </div>
 
                 <div className="my-4 text-xl flex flex-col h-full py-4 justify-between">
-                    <h3 className="font-bold text-lg">{title}</h3>
+                    <h3 className="font-bold text-lg">{cartItem.book.title}</h3>
                     <Button
                         className="bg-red-500 text-white mb-2"
-                        onClick={() => { handleDeleteCartItem(cartItemId) }}
+                        onClick={() => { handleDeleteCartItem(index) }}
                         icon={<FontAwesomeIcon icon={faTrash} />}
                     />
                 </div>
@@ -152,4 +125,4 @@ const CartItem: React.FC<CartItemProps> = ({ userId, cartItemId, title, price, d
     );
 };
 
-export default CartItem;
+export default CartItemCookie;
