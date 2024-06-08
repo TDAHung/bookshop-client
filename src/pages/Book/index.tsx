@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { faAt, faList, faMoneyBill, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarEmpty } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Menu, MenuProps } from "antd";
+import { Empty, Menu, MenuProps } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { AuthorEntity, BookEntity } from "../../types";
 import { CategoryEntity } from "../../types/category";
@@ -24,7 +24,7 @@ const Book = () => {
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]);
     const [page, setPage] = useState<number>(1);
-    const [limit, setLimit] = useState<number>(12);
+    const [limit, setLimit] = useState<number>(8);
     const user = useContext(AuthContext);
     const variables = {
         variables: {
@@ -34,6 +34,10 @@ const Book = () => {
                 {
                     field: "price",
                     order: priceFilter
+                },
+                {
+                    field: "reviews",
+                    order: 'desc'
                 }
             ],
             filter: [
@@ -241,19 +245,25 @@ const Book = () => {
             <div className="col-span-5 flex flex-col justify-between h-full items-center">
                 {
                     books.error ? <p>Error: {books.error.message}</p> :
-                        books.loading ? <Loading /> :
+                        books.loading ? <Loading /> : books.data.books.length == 0 ? <Empty
+                            description={
+                                <span>
+                                    There are no books
+                                </span>
+                            }
+                        /> :
                             <div className="grid grid-cols-4 gap-8 px-16 my-8">
                                 {displayBook()}
                             </div>
                 }
                 {
-                    totalBooks.loading ? <Loading /> : <Paging
+                    totalBooks.loading ? <Loading /> : totalBooks.data.totalBooks != 0 ? <Paging
                         total={totalBooks.data.totalBooks}
                         page={page}
                         setPage={setPage}
                         limit={limit}
                         setLimit={setLimit}
-                    />
+                    /> : null
                 }
 
             </div>

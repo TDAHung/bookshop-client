@@ -16,10 +16,12 @@ import { GET_BOOK } from "../query";
 import { CHECK_CART } from "../../../components/CartButton/query";
 import { useContext } from "react";
 import { AuthContext } from "../../../contexts/authContext";
+import CartButtonCookie from "../../../components/CartButtonCookie";
 
 const BookDetail = () => {
     const { id } = useParams();
-    const user = useContext(AuthContext)
+    const user = useContext(AuthContext);
+
     const { loading, error, data } = useQuery(GET_BOOK, {
         variables: {
             input: Number(id)
@@ -74,6 +76,7 @@ const BookDetail = () => {
         data.book.reviews.forEach(({ rating }: { rating: any }) => {
             avgRating += Number(rating);
         });
+        if (Number.isNaN((avgRating / data.book.reviews.length))) return 0;
         return (avgRating / data.book.reviews.length).toFixed(2);
     }
 
@@ -150,7 +153,7 @@ const BookDetail = () => {
                                 <div className="text-red-500 text-xl mt-4 mb-4">
                                     {renderPrice()}
                                 </div>
-                                {cart.error || cart.loading ? <Loading /> : <CartButton cartId={cart.data.cart.id} userId={user?.id} bookId={Number(id)} />
+                                {user ? cart.error || cart.loading ? <Loading /> : <CartButton cartId={cart.data.cart.id} userId={user?.id} bookId={Number(id)} /> : <CartButtonCookie book={data.book} />
                                 }
                             </div>
                         </div>
